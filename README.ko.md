@@ -18,6 +18,12 @@
 
 掃除屋 — 치워주는 쪽.
 
+<p align="center">
+  <img src="docs/media/scavenger.gif" width="600" alt="화면을 가득 채운 愛 — 벌어진 턱과 이빨, 가장자리에서 기다리는 誠.">
+</p>
+
+<p align="center"><em>실제 보드에서 구동 중 &mdash; <code>git clone</code> 직후의 기본 설정 그대로입니다.</em></p>
+
 ## 필요한 것
 
 | | |

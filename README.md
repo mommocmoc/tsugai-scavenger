@@ -19,6 +19,12 @@ again.
 
 掃除屋 — the ones who tidy things away.
 
+<p align="center">
+  <img src="docs/media/scavenger.gif" width="600" alt="愛 fills the screen mid-act: the jaw open, teeth lit, 誠 waiting at the edge.">
+</p>
+
+<p align="center"><em>Running on real hardware &mdash; the default config, straight out of <code>git clone</code>.</em></p>
+
 ## What you need
 
 | | |
