@@ -2,128 +2,108 @@
 
 [한국어](README.ko.md)
 
-A tsugai — a pair — living on a 2-inch screen.
+A *tsugai* (つがい, pair) living inside a 2-inch screen.
 
-The display is black. A small green light drifts across it, breathing, the way a
-paper lantern does on water. That is all it ever does, until you touch it.
+The screen is pitch black. A single soft green light drifts across the dark, breathing gently like a paper lantern on water. If left untouched, that is all it will ever do.
 
-Then 愛 comes up out of the dark: a deep-sea angler with that lamp over its
-head and a mouth that takes anything. It swallows the thing floating there. The
-lump travels down its body. It shudders, spits the thing back out — and 誠, the
-small pale one, is already waiting to collect it.
+Touch the screen, and 愛 (Ai) rises from the depths: a deep-sea anglerfish with a drifting lure over its head and a gaping jaw that consumes anything in its path. It swallows the floating object whole. The lump travels visibly down its body. It shudders, spits the item back out — and 誠 (Makoto), the small pale companion, is already in place waiting to receive it.
 
 `HERE. TAKE IT.`
 
-Then the fish sinks away, the lamp going out last, and the screen is black
-again.
+The fish then slowly sinks back into the abyss. The lamp lingers until the very last moment before extinguishing, returning the display to pure darkness.
 
-掃除屋 — the ones who tidy things away.
+掃除屋 (*sōjiya*) — the ones who tidy things away.
 
 <p align="center">
   <img src="docs/media/scavenger.gif" width="600" alt="愛 fills the screen mid-act: the jaw open, teeth lit, 誠 waiting at the edge.">
 </p>
 
-<p align="center"><em>Running on real hardware &mdash; the default config, straight out of <code>git clone</code>.</em></p>
+<p align="center"><em>Running on physical hardware &mdash; default configuration right after <code>git clone</code>.</em></p>
 
-## What you need
+## Requirements
 
-| | |
+| Item | Details |
 |---|---|
-| Board | Waveshare ESP32-S3-Touch-LCD-2 (2.0" ST7789 IPS, 320×240, CST816 touch) |
-| Cable | USB-C **data** cable — charge-only cables look identical and won't work |
-| Host | macOS or Linux, Python 3 for the color helper |
+| **Board** | Waveshare ESP32-S3-Touch-LCD-2 (2.0" ST7789 IPS, 320×240, CST816 touch) |
+| **Cable** | USB-C **data** cable (charge-only cables look identical but will not transfer data) |
+| **Host** | macOS or Linux, with Python 3 for the color conversion tool |
 
-No microSD card, no sensors, no network. The whole thing is drawn.
+No microSD card, external sensors, or network connection required. Every visual element is rendered procedurally in code.
 
-A board without a working touch panel is fine too: set `TOUCH_ENABLED false`
-and it surfaces on its own every few seconds.
+Boards without a functional touch panel are fully supported: simply set `TOUCH_ENABLED false`, and the animation will trigger automatically every few seconds.
 
-## Run it
+## Getting Started
 
 ```bash
-./tools/setup.sh     # arduino-cli, the ESP32 core, the graphics library
-./tools/build.sh     # compile — no board needed
-./tools/flash.sh     # plug the board in and send it
+./tools/setup.sh     # Install arduino-cli, ESP32 core, and graphics libraries
+./tools/build.sh     # Compile the firmware (no board connection required)
+./tools/flash.sh     # Connect the board and upload firmware
 ```
 
-`setup.sh` is idempotent; run it as often as you like. If the board isn't
-found, `./tools/doctor.sh` prints one line per requirement and tells you which
-one is missing.
+`setup.sh` is idempotent and safe to run multiple times (it automatically skips already installed components). If your board is not detected, run `./tools/doctor.sh` to diagnose missing dependencies or port issues line by line.
 
-## Change it
+## Customization
 
-Everything a person should ever want to change is in **`scavenger/config.h`**,
-with a comment above each line. Nothing else needs editing.
+All user-tunable settings reside in a single file: **[`scavenger/config.h`](scavenger/config.h)**. Each option is documented with clear comments, so you never need to edit any other source files.
 
-| Setting | Default | What it does |
+| Setting | Default | Description |
 |---|---|---|
-| `SPIT_LABEL` | `"BFG-9000"` | what the scavenger gives back, named on the last frame (≤ ~24 chars) |
-| `FRAME_MS` | `10` | pause between frames. Lower is faster |
-| `TOUCH_ENABLED` | `true` | tap to summon. `false` → it plays by itself |
-| `AUTO_PLAY_MS` | `6000` | how long the lamp drifts before surfacing, when there's no touch |
-| `LAMP_DRIFT_X` / `_Y` | `40` / `22` | how far the light wanders, in canvas pixels (the canvas is 160×120) |
-| `LAMP_GLOW` | `9` | brightness of the lamp, 1–10 |
-| `LAMP_BREATH` | `3` | how much that brightness rises and falls |
-| `SCREEN_BRIGHTNESS` | `85` | backlight, 0–100 |
-| `SCREEN_ROTATION` | `1` | `1` landscape, `3` flipped |
+| `SPIT_LABEL` | `"BFG-9000"` | Label of the returned item shown on the final frame (≤ ~24 characters) |
+| `FRAME_MS` | `10` | Delay between animation frames in ms (lower values mean faster speed) |
+| `TOUCH_ENABLED` | `true` | Summon on touch. If `false`, plays automatically on a timer |
+| `AUTO_PLAY_MS` | `6000` | Idle drift duration before surfacing when touch is disabled (ms) |
+| `LAMP_DRIFT_X` / `_Y` | `40` / `22` | Maximum drift offset from center in canvas pixels (canvas is 160×120) |
+| `LAMP_GLOW` | `9` | Base lamp brightness radius (1–10) |
+| `LAMP_BREATH` | `3` | Amplitude of the lamp breathing pulsation |
+| `SCREEN_BRIGHTNESS` | `85` | Display backlight intensity (0–100) |
+| `SCREEN_ROTATION` | `1` | Orientation (`1`: default landscape, `3`: 180° flipped) |
 
-Section 4 of that file is the board's pin map. Leave it alone unless you
-changed boards.
+Section 4 of `config.h` defines the hardware pin assignments. Keep these unchanged unless you are porting to different hardware.
 
-## Under the hood
+## Architecture
 
-Everything is drawn into a 160×120 canvas and pushed to the panel at 2×, so the
-pixels stay chunky on purpose — no anti-aliasing, no smooth curves, and the
-palette is 20 hand-picked RGB565 values at the top of `scavenger.h`.
+Visuals are rendered onto a 160×120 internal framebuffer and scaled up 2× to fit the 320×240 panel. The chunky pixel look is intentional — there is no anti-aliasing or artificial smoothing. The palette consists solely of 20 hand-picked RGB565 color constants defined at the top of `scavenger.h`.
 
-| File | What it holds |
+| Source File | Responsibility |
 |---|---|
-| `scavenger/scavenger.ino` | boot, the waiting lamp, and the one call that starts the act |
-| `scavenger/scavenger.h` | the palette, 愛, 誠, the lamp, and `scavPlay()` |
-| `scavenger/config.h` | every number you'd want to change |
-| `scavenger/lowres.h` | the canvas, the 2× blit, frame timing, small helpers |
-| `scavenger/touch.h` | the CST816 panel: did someone tap, and where |
+| [`scavenger/scavenger.ino`](scavenger/scavenger.ino) | Bootstrapping, idle lamp drift loop, and act invocation |
+| [`scavenger/scavenger.h`](scavenger/scavenger.h) | Color palette, rendering routines for 愛, 誠, lamp, and `scavPlay()` sequence |
+| [`scavenger/config.h`](scavenger/config.h) | Central configuration parameters |
+| [`scavenger/lowres.h`](scavenger/lowres.h) | Canvas buffer management, 2× blit scaling, frame timing, helper utilities |
+| [`scavenger/touch.h`](scavenger/touch.h) | CST816 touch controller driver and gesture detection |
 
-`scavPlay()` is nine passes, in order: the light alone · the fish resolving out
-of the dark · the jaw dropping · gone (one white frame) · the lump going down ·
-誠 arriving · the handover · sinking away · and a last look at what came back.
-It is one blocking call that owns the screen until the act is over.
+`scavPlay()` orchestrates 9 sequential beats: solitary lamp · the angler resolving from the dark · jaw dropping wide · consumption flash (single white frame) · lump traveling down · arrival of 誠 · handover · sinking into the deep · final glimpse of the returned item. It is a single blocking function that retains full control of the display until the performance concludes.
 
-To change how a creature is drawn, edit `scavFish()` or `scavMakoto()`. To add
-or reorder a beat, edit `scavPlay()`. For a new color, don't guess at hex:
+To alter the visual design of the creatures, edit `scavFish()` or `scavMakoto()`. To add or reorder story beats, adjust `scavPlay()`. When adding new colors, avoid guessing raw hex values — use the conversion helper:
 
 ```bash
 python3 tools/rgb565.py "#7fae5e"
 ```
 
-RGB565 is not RGB888, and a wrong constant shows up as a color you didn't ask
-for rather than an error.
+RGB565 is fundamentally different from standard 24-bit RGB888. Incorrect values will compile without warnings but produce unexpected colors on screen.
 
-After changing anything outside `config.h`:
+Whenever you modify files outside `config.h`, verify compatibility across configurations:
 
 ```bash
-./tools/verify.sh    # compiles every configuration that behaves differently
+./tools/verify.sh    # Compiles and validates all supported feature permutations
 ```
 
-## If something looks wrong
+## Troubleshooting
 
-| Symptom | Try |
+| Symptom | Recommended Action |
 |---|---|
-| Nothing on screen | `./tools/monitor.sh`, then tap RESET — the boot log says whether the LCD came up |
-| Upload fails or no port | Hold **BOOT**, tap **RESET**, release **BOOT**, re-run `flash.sh` |
-| Tapping does nothing | The boot log says if the CST816 answered. If not, set `TOUCH_ENABLED false` |
-| Text cut off | 6px font on a 160px canvas — about 26 characters, then it clips silently |
-| Colors look off | Run `tools/rgb565.py` on the hex you meant, compare against `scavenger.h` |
+| **Blank / Black Screen** | Run `./tools/monitor.sh` and press the **RESET** button. Verify in serial logs that the LCD initializes successfully. |
+| **Upload Failure / Port Missing** | Hold the **BOOT** button, press and release **RESET**, release **BOOT**, then run `./tools/flash.sh` again. |
+| **No Touch Response** | Check the serial boot log to see if the CST816 IC was recognized. If using an unsupported screen, set `TOUCH_ENABLED false`. |
+| **Text Truncated** | With a 6px font on a 160px canvas, text strings exceeding ~26 characters are clipped silently. |
+| **Incorrect Colors** | Convert your target hex color via `python3 tools/rgb565.py` and compare against definitions in `scavenger.h`. |
 
-`./tools/doctor.sh` covers most of this in one shot, and its output is meant to
-be pasted to a coding agent.
+Running `./tools/doctor.sh` diagnoses almost all common hardware and toolchain issues, producing output formatted for easy sharing with coding assistants.
 
-## Working on this with an agent
+## Working with AI Agents
 
-[AGENTS.md](AGENTS.md) is the canonical guide — the file map, the one rule
-(config.h and nowhere else), and the definition of done. `CLAUDE.md` and
-`GEMINI.md` point at it.
+See [AGENTS.md](AGENTS.md) for canonical agent instructions — codebase layout, the rule of confining user changes to `config.h`, and completion criteria. `CLAUDE.md` and `GEMINI.md` point directly to it.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT License. See [LICENSE](LICENSE) for details.
