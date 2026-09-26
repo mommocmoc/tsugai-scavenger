@@ -1,0 +1,14 @@
+# arduino-cli build output
+.build/
+*.bin
+*.elf
+*.map
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+venv/
