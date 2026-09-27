@@ -12,6 +12,17 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 bold "Scavenger — environment setup"
 echo
 
+# ----------------------------------------------------------- Rosetta 2 (macOS)
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then
+  if arch -x86_64 /usr/bin/true >/dev/null 2>&1; then
+    ok "Rosetta 2 (arm64)"
+  else
+    info "installing Rosetta 2 for x86_64 arduino tools..."
+    softwareupdate --install-rosetta --agree-to-license \
+      || warn "Rosetta 2 install failed. Run manually: softwareupdate --install-rosetta"
+  fi
+fi
+
 # ---------------------------------------------------------------- arduino-cli
 if command -v arduino-cli >/dev/null 2>&1; then
   ok "arduino-cli $(arduino-cli version | awk '{print $3}')"

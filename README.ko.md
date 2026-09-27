@@ -26,7 +26,7 @@
 |---|---|
 | 보드 | Waveshare ESP32-S3-Touch-LCD-2 (2.0인치 ST7789 IPS, 320×240, CST816 터치) |
 | 케이블 | USB-C **데이터** 케이블 (충전 전용 케이블은 겉모습이 같지만 통신이 되지 않습니다) |
-| 호스트 환경 | macOS 또는 Linux, 색상 변환 도구용 Python 3 |
+| 호스트 환경 | macOS 또는 Linux, 색상 변환 도구용 Python 3 (Apple Silicon Mac은 Rosetta 2 필요) |
 
 microSD 카드도, 외장 센서도, 네트워크 연결도 필요 없습니다. 화면 위의 모든 것은 순수 코드로 그려집니다.
 
@@ -92,6 +92,7 @@ RGB565는 일반적인 RGB888과 색상 체계가 다릅니다. 상수를 잘못
 
 | 증상 | 점검 방법 |
 |---|---|
+| 빌드 실패 (`bad CPU type in executable`) | Apple Silicon Mac에서 아두이노 `ctags` 실행을 위해 Rosetta 2가 필요합니다: `softwareupdate --install-rosetta --agree-to-license` |
 | 화면에 아무것도 나오지 않음 | `./tools/monitor.sh`를 실행한 상태에서 보드의 **RESET** 버튼을 누르세요. 부팅 로그에 LCD 초기화 성공 여부가 표시됩니다. |
 | 업로드 실패 또는 시리얼 포트 미인식 | 보드의 **BOOT** 버튼을 누른 채 **RESET** 버튼을 딸깍 누르고, **BOOT** 버튼을 뗀 후 `flash.sh`를 다시 실행해 보세요. |
 | 화면을 터치해도 반응이 없음 | 부팅 로그에서 CST816 터치 패널의 응답 여부를 확인하세요. 터치를 지원하지 않는 패널이라면 `TOUCH_ENABLED false`로 설정합니다. |
@@ -102,7 +103,7 @@ RGB565는 일반적인 RGB888과 색상 체계가 다릅니다. 상수를 잘못
 
 ## 에이전트와 함께 작업할 때
 
-[AGENTS.md](AGENTS.md)가 프로젝트의 기준 규칙 문서입니다. 전체 파일 맵, 단 하나의 절대 원칙(`config.h` 외에는 손대지 않기), 작업 완료 조건 등이 정의되어 있습니다. `CLAUDE.md`와 `GEMINI.md` 또한 이 문서를 가리킵니다.
+[AGENTS.md](AGENTS.md)가 프로젝트의 기준 규칙 문서입니다. 전체 파일 맵, 단 하나의 절대 원칙(`config.h` 외에는 손대지 않기), 작업 완료 조건 등이 정의되어 있습니다. Apple Silicon(Mac)에서 에이전트가 빌드할 때 x86_64 기반 아두이노 도구 구동을 위해 Rosetta 2가 필요하다는 점도 명시되어 있습니다. `CLAUDE.md`와 `GEMINI.md` 또한 이 문서를 가리킵니다.
 
 ## 라이선스
 

@@ -26,7 +26,7 @@ The fish then slowly sinks back into the abyss. The lamp lingers until the very 
 |---|---|
 | **Board** | Waveshare ESP32-S3-Touch-LCD-2 (2.0" ST7789 IPS, 320×240, CST816 touch) |
 | **Cable** | USB-C **data** cable (charge-only cables look identical but will not transfer data) |
-| **Host** | macOS or Linux, with Python 3 for the color conversion tool |
+| **Host** | macOS or Linux, with Python 3 (Apple Silicon Mac requires Rosetta 2) |
 
 No microSD card, external sensors, or network connection required. Every visual element is rendered procedurally in code.
 
@@ -92,6 +92,7 @@ Whenever you modify files outside `config.h`, verify compatibility across config
 
 | Symptom | Recommended Action |
 |---|---|
+| **Build Error (`bad CPU type`)** | Arduino CLI uses an x86_64 ctags binary on macOS. Install Rosetta 2: `softwareupdate --install-rosetta --agree-to-license`. |
 | **Blank / Black Screen** | Run `./tools/monitor.sh` and press the **RESET** button. Verify in serial logs that the LCD initializes successfully. |
 | **Upload Failure / Port Missing** | Hold the **BOOT** button, press and release **RESET**, release **BOOT**, then run `./tools/flash.sh` again. |
 | **No Touch Response** | Check the serial boot log to see if the CST816 IC was recognized. If using an unsupported screen, set `TOUCH_ENABLED false`. |
@@ -102,7 +103,7 @@ Running `./tools/doctor.sh` diagnoses almost all common hardware and toolchain i
 
 ## Working with AI Agents
 
-See [AGENTS.md](AGENTS.md) for canonical agent instructions — codebase layout, the rule of confining user changes to `config.h`, and completion criteria. `CLAUDE.md` and `GEMINI.md` point directly to it.
+See [AGENTS.md](AGENTS.md) for canonical agent instructions — codebase layout, the rule of confining user changes to `config.h`, and completion criteria. It also notes that Apple Silicon Macs require Rosetta 2 for Arduino CLI's x86_64 toolchain components. `CLAUDE.md` and `GEMINI.md` point directly to it.
 
 ## License
 

@@ -30,6 +30,14 @@ for lib in "GFX Library for Arduino"; do
   fi
 done
 
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then
+  if arch -x86_64 /usr/bin/true >/dev/null 2>&1; then
+    ok "$(printf '%-24s' 'Rosetta 2 (arm64)') installed"
+  else
+    warn "$(printf '%-24s' 'Rosetta 2 (arm64)') MISSING — run: softwareupdate --install-rosetta --agree-to-license"
+  fi
+fi
+
 echo
 
 # --- project files ---

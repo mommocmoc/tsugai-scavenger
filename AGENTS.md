@@ -101,6 +101,9 @@ is no state machine to keep in sync.
   anything that assumes a 160-wide row will not.
 - The board sometimes needs a manual bootloader entry: hold **BOOT**, tap
   **RESET**, release **BOOT**, then re-run `flash.sh`.
+- **Apple Silicon (macOS) requires Rosetta 2**: Arduino CLI depends on an x86_64
+  `ctags` binary on macOS. If build fails with `ctags: bad CPU type in executable`,
+  install Rosetta 2: `softwareupdate --install-rosetta --agree-to-license`.
 
 ## Definition of done
 
